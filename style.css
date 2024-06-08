@@ -1,0 +1,15 @@
+body {
+    background-color: #444444;
+}
+
+h1 {
+    color: white;
+    text-align: center;
+}
+
+p {
+    color: white;
+    text-align: center;
+    font-family: verdana, serif;
+    font-size: 20px;
+}
