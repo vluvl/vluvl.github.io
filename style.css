@@ -55,6 +55,16 @@ nav {
   box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
 }
 
+nav a {
+  color: var(--primary-color);
+  transition: var(--transition);
+}
+
+nav a:hover {
+  color: var(--secondary-color);
+  border-bottom: 2px solid var(--secondary-color);
+}
+
 nav ul {
     display: flex;
     gap: 2rem;
