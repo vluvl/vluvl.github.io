@@ -1,15 +1,32 @@
+
+:root {
+    --font-family: verdana, serif;
+    --text-color: white;
+    --bg-color: #444444
+}
+
 body {
-    background-color: #444444;
+    background-color: var(--bg-color);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 h1 {
-    color: white;
+    color: var(--text-color);
     text-align: center;
 }
 
 p {
-    color: white;
+    color: var(--text-color);
     text-align: center;
-    font-family: verdana, serif;
+    font-family: var(--font-family);
     font-size: 20px;
 }
