@@ -1,0 +1,28 @@
+body {font-size: small; font-family: verdana, arial, sans-serif;
+    max-width: 800px; margin: 0 auto; padding: 10px}
+p, ul, ol {margin-top: 0}
+img {border: 0; vertical-align: top}
+ul.noindent {padding-left: 8px; margin-left: 8px}
+ol.noindent {padding-left: 8px; margin-left: 8px}
+.noindent li {margin-bottom: 0.5em}
+.ref {margin-left: 1.5em}
+.ref p {text-indent: -1.5em; margin-bottom: 0.5em}
+a {text-decoration: none; color: blue}
+a:hover {text-decoration: underline}
+h1 {color: white; background-color: goldenrod; font-size: 1.5em; font-weight: normal;
+    margin: 0; padding: 0.2em 0 0.3em 0.5em}
+h1 + div {text-align: right; margin-bottom: 1em}
+h3, h4 {margin-bottom: 0.5em}
+
+.figLeft, .figCenter, .figRight {width: 35%; max-width: max-content; min-width: min-content}
+.figLeft {float: left; margin-right: 2%}
+.figCenter {margin: 0 auto}
+.figRight {float: right; margin-left: 2%}
+.figCenterRight {margin: 0 auto; width: 80%; clear: both}
+.figLeft img, .figCenter img, .figRight img {width: 100%; max-width: max-content}
+.figCenterRight img {float: left; padding-right: 2%; margin-bottom: 1em; width: 50%;
+    max-width: max-content}
+.figLeft, .figCenter, .figRight, .figCenterRight {font-style: italic; font-size: 0.9em}
+div.figCenter, div.figRight, div.figLeft {margin-bottom: 1em}
+
+p, li {text-align: justify}
