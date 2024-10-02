@@ -26,3 +26,42 @@ h3, h4 {margin-bottom: 0.5em}
 div.figCenter, div.figRight, div.figLeft {margin-bottom: 1em}
 
 p, li {text-align: justify}
+
+fieldset {display: inline-block; vertical-align: top}
+fieldset:not(:first-of-type) {margin-left: 1em}
+.item label, input {display: inline-block; vertical-align: middle}
+.item label {width: 45px; text-align: right; padding-right: 0.5em}
+input[type=number] {width: 50px}
+input[type=range] {width: 129px}
+output {display: inline-block; text-align: left}
+
+:root {--chartW: 294px; --chartH: 150px; --blurBuf: 30px}
+#stageFrame {position: relative; overflow: hidden; margin-bottom: 1em; width: 600px; height: 450px}
+#stage {position: absolute; top: calc(var(--blurBuf) * -1); left: calc(var(--blurBuf) * -1); width: 600px; height: 450px}
+#device div:not(:first-of-type) {margin-top: 5px}
+#control {display: inline-block; white-space: nowrap}
+#chart {display: block; overflow: hidden; width: var(--chartW); height: var(--chartH);
+    border: 1px solid; margin-bottom: 5px; position: relative; background: gainsboro}
+.dragLayer {width: calc(var(--chartW) * 3); height: calc(var(--chartH) * 3);
+    display: block; opacity: 0; position: absolute; top: calc(var(--chartH) * -1);
+    left: calc(var(--chartW) * -1)}
+#focusLine {background: white; color: white; width: 1px; border: none;
+    border-left: 1px dashed grey; height: var(--chartH); position: absolute;
+    mix-blend-mode: multiply}
+#chart:hover {cursor: grab}
+#rays {width: var(--chartW); height: var(--chartH); background: gainsboro;
+    border: 1px solid}
+
+.figPair {text-align: center}
+.figPair div {display: inline-block; vertical-align: top}
+.figPair div:first-child {width: 247px; margin-right: 40px}
+.figPair div:last-child {width: 240px; text-align: left}
+
+.figPairB {text-align: center}
+.figPairB div {display: inline-block; vertical-align: middle}
+.figPairB div:first-child {width: 50%; margin-right: 5%}
+.figPairB img:first-child {width: 100%}
+.figPairB div:last-child {width: 35%; text-align: left}
+
+#footer {text-align: center; margin: 2em auto; width: 370px}
+#footer p {text-align: center}

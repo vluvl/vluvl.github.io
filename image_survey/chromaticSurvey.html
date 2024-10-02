@@ -1,0 +1,91 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name=viewport content='width=device-width'>
+    <meta name=description content="Use this browser-based tool to explore how well your equipment's optics focuses the
+  three RGB colour channels, by analysing its longitudinal chromatic aberration ('LoCA').  Includes example analyses of microscopes and
+  macro lenses.">
+    <title>Chromatic aberration simulator (longitudinal and lateral)</title>
+    <link href='general.css' type='text/css' rel=stylesheet>
+    <!-- tags here -->
+    <style type='text/css'>
+        #stageFrame {position: relative; overflow: hidden; margin-bottom: 1em; width: 600px; height: 450px}
+    </style>
+</head>
+
+<body style='min-width: 600px'>
+<h1>Chromatic aberration simulator (longitudinal and lateral)</h1>
+
+<h3>Simulator</h3>
+
+<div style='display: grid; place-items: center'>
+
+    <div id=stageFrame>
+        <canvas id=stage></canvas>
+    </div>
+
+    <div id=control>
+        <div style='display: inline-block'>
+            <div id=chart>
+                <div id=redCurve class=dragLayer style='background: red'></div>
+                <div id=greenCurve class=dragLayer style='background: green'></div>
+                <div id=blueCurve class=dragLayer style='background: blue'></div>
+                <div id=focusLine></div>
+                <canvas id=curves></canvas>
+            </div>
+            <div id=buttons style='text-align: center'>
+                <button onclick="changeColor(this,'red')">R</button>
+                <output id=redXY style='color: red'></output>
+                <button onclick="changeColor(this,'green')">G</button>
+                <output id=greenXY style='color: green'></output>
+                <button onclick="changeColor(this,'blue')">B</button>
+                <output id=blueXY style='color: blue'></output>
+            </div>
+        </div>
+<!--        <div style='display: inline-block; vertical-align: top; margin-left: 5px'>-->
+<!--            <canvas id=rays></canvas>-->
+<!--            &lt;!&ndash;<div class=item><label>Focus:</label><input id=focus type=range min=-80 max=80 value=0-->
+<!--                                                        oninput='focusChanged()'> <output id=focusValue>0</output></div>&ndash;&gt;-->
+<!--        </div>-->
+    </div>
+
+    <form class=parm id=inform oninput='renderImage()' style='margin-top: 1em'>
+
+        <div style="display: none;">
+
+            <fieldset id=lat>
+                <legend>Lateral Aberration</legend>
+                <input id=linked type=hidden><label for=linked></label>
+                <div id=latSliders>
+                    <div class=item><label>Red:</label><input id=redLat type=range min=-25 max=25 value=0> <output id=redLatValue></output></div>
+                    <div class=item><label>Green:</label><input id=greenLat type=range min=-25 max=25 value=0> <output id=greenLatValue></output></div>
+                    <div class=item><label>Blue:</label><input id=blueLat type=range min=-25 max=25 value=0> <output id=blueLatValue></output></div>
+                    <div class=item><label>Reset</label><input id=resetLat type="button"><output id="resetLatTrigger"></output></div>
+                </div>
+            </fieldset>
+
+
+            <fieldset id=images>
+                <legend>Image</legend>
+<!--                <div><input id=sqrs name=photo type=radio value='./testImages/1image.jpg' checked><label for=sqrs>Squares</label></div>-->
+            </fieldset>
+
+        </div>
+
+    </form>
+    <button onclick="addBlur('red')">More blur</button>
+    <button onclick="subtractBlur('red')">Less blur</button>
+    <p style='margin-top: 1em'>Make a screen capture of the
+        <a download='sim.png' href='' onclick="saveCanvas(this, 'sim')">simulation</a>.</p>
+
+</div>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+
+<script src="chromaticSurvey.js"></script>
+
+</body>
+</html>
