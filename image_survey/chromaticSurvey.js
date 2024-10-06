@@ -11,23 +11,79 @@
  *  jquery.ui.mouse.js
  * Handle touch input, for example from phones
  */
-!function(a){function f(a,b){if(!(a.originalEvent.touches.length>1)){a.preventDefault();var c=a.originalEvent.changedTouches[0],d=document.createEvent("MouseEvents");d.initMouseEvent(b,!0,!0,window,1,c.screenX,c.screenY,c.clientX,c.clientY,!1,!1,!1,!1,0,null),a.target.dispatchEvent(d)}}if(a.support.touch="ontouchend"in document,a.support.touch){var e,b=a.ui.mouse.prototype,c=b._mouseInit,d=b._mouseDestroy;b._touchStart=function(a){var b=this;!e&&b._mouseCapture(a.originalEvent.changedTouches[0])&&(e=!0,b._touchMoved=!1,f(a,"mouseover"),f(a,"mousemove"),f(a,"mousedown"))},b._touchMove=function(a){e&&(this._touchMoved=!0,f(a,"mousemove"))},b._touchEnd=function(a){e&&(f(a,"mouseup"),f(a,"mouseout"),this._touchMoved||f(a,"click"),e=!1)},b._mouseInit=function(){var b=this;b.element.bind({touchstart:a.proxy(b,"_touchStart"),touchmove:a.proxy(b,"_touchMove"),touchend:a.proxy(b,"_touchEnd")}),c.call(b)},b._mouseDestroy=function(){var b=this;b.element.unbind({touchstart:a.proxy(b,"_touchStart"),touchmove:a.proxy(b,"_touchMove"),touchend:a.proxy(b,"_touchEnd")}),d.call(b)}}}(jQuery);
+!function (a) {
+    function f(a, b) {
+        if (!(a.originalEvent.touches.length > 1)) {
+            a.preventDefault();
+            var c = a.originalEvent.changedTouches[0], d = document.createEvent("MouseEvents");
+            d.initMouseEvent(b, !0, !0, window, 1, c.screenX, c.screenY, c.clientX, c.clientY, !1, !1, !1, !1, 0, null), a.target.dispatchEvent(d)
+        }
+    }
+
+    if (a.support.touch = "ontouchend" in document, a.support.touch) {
+        var e, b = a.ui.mouse.prototype, c = b._mouseInit, d = b._mouseDestroy;
+        b._touchStart = function (a) {
+            var b = this;
+            !e && b._mouseCapture(a.originalEvent.changedTouches[0]) && (e = !0, b._touchMoved = !1, f(a, "mouseover"), f(a, "mousemove"), f(a, "mousedown"))
+        }, b._touchMove = function (a) {
+            e && (this._touchMoved = !0, f(a, "mousemove"))
+        }, b._touchEnd = function (a) {
+            e && (f(a, "mouseup"), f(a, "mouseout"), this._touchMoved || f(a, "click"), e = !1)
+        }, b._mouseInit = function () {
+            var b = this;
+            b.element.bind({
+                touchstart: a.proxy(b, "_touchStart"),
+                touchmove: a.proxy(b, "_touchMove"),
+                touchend: a.proxy(b, "_touchEnd")
+            }), c.call(b)
+        }, b._mouseDestroy = function () {
+            var b = this;
+            b.element.unbind({
+                touchstart: a.proxy(b, "_touchStart"),
+                touchmove: a.proxy(b, "_touchMove"),
+                touchend: a.proxy(b, "_touchEnd")
+            }), d.call(b)
+        }
+    }
+}(jQuery);
 
 
 var srcImg, r, g, b, iw, ih, blurBuf;
+var PESTArray = [];
+var PESTStop = 3.5;
 
-var stepValue = 40;
-var stepArray = [30,30,30,30,30,30];
-var valueArray = [100,100,100,100,100,100];
-var currentIndex = 1;
-
-var images = [];
-for (let i=0; i<2;i++){
-    images.push(`./testImages/${i}image.jpg`)
+function initPEST(id, cur_val, stepSize, color) {
+    var newPESTRun = {};
+    newPESTRun.id = id;
+    newPESTRun.value = cur_val;
+    newPESTRun.valueHistory = [];
+    newPESTRun.step = stepSize;
+    newPESTRun.color = color;
+    newPESTRun.trial = 0;
+    newPESTRun.trialPerRun = [];
+    newPESTRun.correctTrial = 0;
+    newPESTRun.accuracy = 0.70; // too many correct answers needed for a value change
+    newPESTRun.constantW = 1;
+    newPESTRun.directionStreak = 0;
+    newPESTRun.stepChange = 1;
+    newPESTRun.run = 0;
+    newPESTRun.status = 0; // 0 = ongoing; 1 = finished
+    return newPESTRun;
 }
 
+var currentIndex = 0;
+
+var images = [];
+for (let i = 0; i < 3; i++) {
+    images.push(`./testImages/${i}image.jpg`)
+}
+for (let i = 0; i < images.length; i++) {
+    PESTArray.push(initPEST(i, 60 , 15, 'red')); //arbitrary values, should be changed later
+
+}
+console.log(PESTArray[0].value + ' ' + PESTArray[1].value);
 var presets = [
-    [[0,0], [0,0], [0,0],          false, [0, 0, 0]] //no aberration
+    [[0, 0], [0, 0], [0, 0], false, [0, 0, 0]] //no aberration
 ];  // LoCA curve minima (RGB), linked, LaCA values (RGB)
 
 var cw = $('#chart').width();
@@ -41,7 +97,7 @@ var zPt = cw;  // index of pts midpoint; thus there are zPts * 2 + 1 pts
 
 // inputs
 var focus = 0;
-var xy = {'red': [0,0], 'green': [0,0], 'blue': [0,0]};
+var xy = {'red': [0, 0], 'green': [0, 0], 'blue': [0, 0]};
 var lat = {'red': 0, 'green': 0, 'blue': 0};
 var latLinked;
 
@@ -51,9 +107,9 @@ for (var i = 0; i <= zPt * 2; i++) {
 }
 
 srcImg = new Image();
-$(document).ready(function() {
-    $(srcImg).one('load', function() {
-        $('fieldset').height(Math.max.apply(Math, $('fieldset').map(function() {
+$(document).ready(function () {
+    $(srcImg).one('load', function () {
+        $('fieldset').height(Math.max.apply(Math, $('fieldset').map(function () {
             return $(this).height();
         }).get()));
         xOrigin = ($('#chart').width() - $('#redCurve img').width()) / 2;
@@ -63,13 +119,19 @@ $(document).ready(function() {
         blurBuf = window.getComputedStyle(document.body).getPropertyValue('--blurBuf');
         blurBuf = parseInt(blurBuf);
         $("#redCurve").draggable({
-            drag: function(event, ui) {curveDrag(ui)}
+            drag: function (event, ui) {
+                curveDrag(ui)
+            }
         });
         $("#greenCurve").draggable({
-            drag: function(event, ui) {curveDrag(ui)}
+            drag: function (event, ui) {
+                curveDrag(ui)
+            }
         });
         $("#blueCurve").draggable({
-            drag: function(event, ui) {curveDrag(ui)}
+            drag: function (event, ui) {
+                curveDrag(ui)
+            }
         });
         changeColor($('#buttons button').first(), 'red');
         if (!isNaN(blurBuf)) {  // test for ie11/edge
@@ -84,35 +146,151 @@ $(document).ready(function() {
 });
 
 /////////////////////////////  V  ///////////////////////////
-function changeImage(){
+
+
+function changeImage() {
     currentIndex = (currentIndex + 1) % images.length;
+    var completed = 0;
+    while(PESTArray[currentIndex].status === 1){
+        currentIndex = (currentIndex + 1) % images.length;
+        completed++;
+        if (completed === images.length){
+            break;
+        }
+    }
+    if(completed === images.length){
+        // experiment done! All pest runs are finished
+        window.location.href = "end.html";
+    }
     renderImage();
+    console.log(currentIndex +' - Run: ' + PESTArray[currentIndex].run + '; Trial no. ' + PESTArray[currentIndex].trial + ' with ' +
+        PESTArray[currentIndex].correctTrial + ' CTs has value: ' + PESTArray[currentIndex].value + ' and a step size: ' +
+        PESTArray[currentIndex].step + ' with stepChenge: ' + PESTArray[currentIndex].stepChange);
 }
 
-function changeRGBBlur(colour, value){
-    updateXY(colour,value,0);
-    drawCurves();
-    refreshImage();
+function PESTRatio() {
+    return PESTArray[currentIndex].trial * PESTArray[currentIndex].accuracy;
 }
 
-function addBlur(colour){
+function decideNextValue(direction) {
+    var newValue;
+    //limit the step size
+    if (PESTArray[currentIndex].step > 30){
+        PESTArray[currentIndex].step = 30;
+    }
+    // the value of chromatic aberration can go into negative, so we need to adjust our step direction accordingly
+    if (PESTArray[currentIndex].value >= 0) {
+        newValue = PESTArray[currentIndex].value + PESTArray[currentIndex].step * direction;
+    } else {
+        newValue = PESTArray[currentIndex].value - PESTArray[currentIndex].step * direction;
+    }
+    // clamp the new value between -150 and 150
+    if (newValue > 100)
+        newValue = 100;
+    if (newValue < -100)
+        newValue = -100;
+    return newValue;
+}
 
-    var value = xy[colour][0] + stepValue;
-    if (value > 150)
-        value = 150;
-    updateXY(colour,value,0);
+function PESTDecision(detectBlur) {
+    PESTArray[currentIndex].trial += 1; // add a trial to the count
+    if (detectBlur > 0) {
+        PESTArray[currentIndex].correctTrial += 1; //if the answer is that blur is still being seen, then count as correct trial
+    }
+    // pest factors
+    var constantW = PESTArray[currentIndex].constantW;
+    var ratio = PESTRatio();
+
+    var imgValue = PESTArray[currentIndex].value;
+    // Note: right and wrong answers mean that the participant can or cannot see Chromatic Aberration respectively
+    // So when a participant answers with a right answer, it means that they see Chromatic Aberration
+    if (PESTArray[currentIndex].correctTrial <= ratio - constantW) { // too many wrong answers
+        imgValue = decideNextValue(1); // increase blur
+        if (PESTArray[currentIndex].directionStreak === 0) { // we are at first run of the whole experiment
+            PESTArray[currentIndex].directionStreak = 1; // we do not influence the step size, just set the direction for future decisions
+        } else if (PESTArray[currentIndex].directionStreak < 0) { // if we change direction from negative
+            PESTArray[currentIndex].step /= 2; // half the step
+            PESTArray[currentIndex].stepChange = 1 / 2; // record the step change
+            PESTArray[currentIndex].directionStreak = 1; // and set the new direction
+        } else if (PESTArray[currentIndex].directionStreak === 3) { // if we have made 3 steps in the positive direction (away from 0 CA)
+            if (PESTArray[currentIndex].stepChange !== 2) { // we check if the last step change was a doubling
+                PESTArray[currentIndex].step *= 2;  // and if it was not, we double the step now
+                PESTArray[currentIndex].stepChange = 2; // and record the doubling
+            }
+            PESTArray[currentIndex].directionStreak += 1; // continue to 4th step
+        } else { // starting from step 4 onwards
+            PESTArray[currentIndex].step *= 2; // we double the step
+            PESTArray[currentIndex].stepChange = 2; // and record the type of change
+            PESTArray[currentIndex].directionStreak += 1; // continue counting
+        }
+        PESTArray[currentIndex].run += 1;
+    } else if (PESTArray[currentIndex].correctTrial >= ratio + constantW) { // too many right answers
+        imgValue = decideNextValue(-1); // decrease blur
+        if (PESTArray[currentIndex].directionStreak === 0) { // we are at first run of the whole experiment
+            PESTArray[currentIndex].directionStreak = -1; // we do not influence the step size, just set the direction for future decisions
+        } else if (PESTArray[currentIndex].directionStreak > 0) { // if we change direction from positive
+            PESTArray[currentIndex].step /= 2; // half the step
+            PESTArray[currentIndex].stepChange = 1 / 2; // record the step change
+            PESTArray[currentIndex].directionStreak = -1; // and set the new direction
+        } else if (PESTArray[currentIndex].directionStreak === -3) { // if we have made 3 steps in the negative direction (towards 0 CA)
+            if (PESTArray[currentIndex].stepChange !== 2) { // we check if the last step change was a doubling
+                PESTArray[currentIndex].step *= 2;  // and if it was not, we double the step now
+                PESTArray[currentIndex].stepChange = 2; // and record the doubling
+            }
+            PESTArray[currentIndex].directionStreak -= 1; // continue to 4th step
+        } else { // starting from step 4 onwards
+            PESTArray[currentIndex].step *= 2; // we double the step
+            PESTArray[currentIndex].stepChange = 2; // and record the type of change
+            PESTArray[currentIndex].directionStreak -= 1; // continue counting
+        }
+        PESTArray[currentIndex].run += 1;
+    }
+    if (imgValue !== PESTArray[currentIndex].value) {
+        PESTArray[currentIndex].trialPerRun.push(PESTArray[currentIndex].trial);
+        PESTArray[currentIndex].valueHistory.push(PESTArray[currentIndex].value);
+        // if the blur value has changed, reset the number of trials of the run
+        PESTArray[currentIndex].trial = 0;
+        PESTArray[currentIndex].correctTrial = 0;
+    }
+    if(PESTArray[currentIndex].step <= PESTStop){
+        PESTArray[currentIndex].status = 1;
+        const saveRun = JSON.stringify(PESTArray[currentIndex]);
+        localStorage.setItem(`run${currentIndex}`, saveRun);
+    }
+    return imgValue;
+}
+
+function trialAnswer(color, polarity) {
+
+    // do pest decision here.
+    var blurValue = PESTDecision(polarity);
+    PESTArray[currentIndex].value = blurValue;
+
+
+    updateXY(color, blurValue, 0);
     drawCurves();
     changeImage();
+}
 
-}
-function subtractBlur(colour){
-    var value = xy[colour][0] - stepValue;
-    if (value < -150)
-        value = -150;
-    updateXY(colour,value,0);
-    drawCurves();
-    changeImage();
-}
+// function addBlur(colour) {
+//
+//     var value = xy[colour][0] + stepValue;
+//     if (value > 150)
+//         value = 150;
+//     updateXY(colour, value, 0);
+//     drawCurves();
+//     changeImage();
+//
+// }
+//
+// function subtractBlur(colour) {
+//     var value = xy[colour][0] - stepValue;
+//     if (value < -150)
+//         value = -150;
+//     updateXY(colour, value, 0);
+//     drawCurves();
+//     changeImage();
+// }
 
 ////////////////////////////// NOT V /////////////////////////////
 function focusChanged() {
@@ -128,7 +306,7 @@ function refreshChart() {
     $('#focusLine').css({'left': xLeftBase + focus});
 }
 
-function curveDrag (ui) {
+function curveDrag(ui) {
     ui.position.left = Math.max(-cw / 2 + 5, Math.min(cw / 2 - 5, ui.position.left + cw)) - cw;
     ui.position.top = Math.min(0, Math.max(-ch + 15, ui.position.top + ch)) - ch;
     updateXY(ui.helper.context.id.substring(0, ui.helper.context.id.indexOf('Curve')),
@@ -137,7 +315,6 @@ function curveDrag (ui) {
     //drawRays();
     refreshImage();
 }
-
 
 
 function updateXY(colour, x, y) {
@@ -152,14 +329,14 @@ function updateSliders() {
 
 }
 
-document.getElementById('resetLat').onclick = function() {
+document.getElementById('resetLat').onclick = function () {
     resetSliders();
 };
 
-function resetSliders(){
+function resetSliders() {
     ['redLat', 'greenLat', 'blueLat'].forEach(function (e) {
         // $('#' + e + 'Value').val(0);
-        document.getElementById(e).value=0;
+        document.getElementById(e).value = 0;
     });
     refreshImage();
 
@@ -183,15 +360,17 @@ function drawCurves() {
         var xOffset = xy[c][0];
         var yOffset = -xy[c][1];
         ctx.moveTo(xOffset, ch - pts[zPt / 2] + yOffset);
-        for (var i = 1; i <= zPt; i+= 2)
+        for (var i = 1; i <= zPt; i += 2)
             ctx.lineTo(i + xOffset, ch - pts[i + zPt / 2] + yOffset);
         ctx.stroke();
     }
 }
 
 function drawRays() {
-    var lens = {x: 40, y: ch/2, thickness: 15, radius: ch/2-5, leftRadius: 200,
-        rightRadius: 200, focalLength: 190};
+    var lens = {
+        x: 40, y: ch / 2, thickness: 15, radius: ch / 2 - 5, leftRadius: 200,
+        rightRadius: 200, focalLength: 190
+    };
     var ctx = raysCanv.ctx;
     ctx.clearRect(0, 0, raysCanv.w, raysCanv.h);
     var xFocal = lens.x + lens.focalLength;
@@ -355,8 +534,9 @@ function renderImage() {
     if ($(srcImg).attr('src') == $("input[name='photo']:checked").val() && false)
         refreshImage();
     else {
-        $(srcImg).one('load', function() {
+        $(srcImg).one('load', function () {
             loadRGB();
+            updateXY(PESTArray[currentIndex].color, PESTArray[currentIndex].value, 0);
             refreshImage();
         });
         $(srcImg).attr('src', `./testImages/${currentIndex}image.jpg`);
@@ -374,7 +554,7 @@ function readUi() {
 }
 
 function getBlur(colour) {
-    return Math.round((pts[zPt - xy[colour][0] + focus] + xy[colour][1]) / pts[0] * 70 * 10) / 10;
+    return Math.round((pts[Math.round(zPt - xy[colour][0]) + focus] + xy[colour][1]) / pts[0] * 70 * 10) / 10; // round had to be used here to work with decimal blur values...
 }
 
 function refreshImage() {
@@ -382,7 +562,7 @@ function refreshImage() {
     var blur = [];
     for (var i = 0; i < 3; i++) {
         blur[i] = getBlur(colours[i]);
-        $('#' + colours[i].substring(0,1) + 'd').text('(' + blur[i] + ')');
+        $('#' + colours[i].substring(0, 1) + 'd').text('(' + blur[i] + ')');
     }
     var stage = canvFromID('stage', r.w, r.h);
     addTo(stage, r, 'blur(' + blur[0] + 'px)', latLinked ? blur[0] : lat['red']);
@@ -420,7 +600,7 @@ function saveCanvas(el, id) {
 
 // **********************************
 /** @constructor */
-function Canv (canv, w, h) {
+function Canv(canv, w, h) {
     // to access a px at x,y: [(y * this.w + x) * 4 + c] = value;
     this.getData = function () {
         this.data = this.ctx.getImageData(0, 0, this.w, this.h);
@@ -446,6 +626,6 @@ function Canv (canv, w, h) {
     this.getData();
 }
 
-function canvFromID (id, w, h) {
+function canvFromID(id, w, h) {
     return new Canv(document.querySelector('#' + id), w, h);
 }

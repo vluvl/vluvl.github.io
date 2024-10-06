@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>End of experiment</title>
+    <style type='text/css'>
+        body {font-size: small; font-family: verdana, arial, sans-serif;
+            max-width: 1000px; margin: 0 auto; padding: 10px}
+        .image_with_text:after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+
+        .text {
+            float: right;
+            width: 60%;
+        }
+
+        .images {
+            float: left;
+            width: 30%;
+        }
+
+        #buttonContainer{
+            position: relative;
+            height: 85px;
+        }
+    </style>
+</head>
+<body>
+<h3>The experiment is now concluded</h3>
+<p>Press Download Results to get the results.</p>
+<div id="buttonContainer">
+    <button id = "exportData" onclick="exportData()" style="border: ghostwhite;padding: 15px 32px;text-align: center;text-decoration: none; display: inline-block; font-size: 48px;">Download results</button>
+    <a id="exportHistoryLink" style="display: none;">Export</a>
+    <button id = "start" onclick="location.href='start.html'" style="border: ghostwhite;padding: 15px 32px;text-align: center;text-decoration: none; display: inline-block; font-size: 48px;">Restart experiment</button>
+</div>
+
+<script>
+    function exportData(){
+        let data = [];
+        for (var i = 0; i < localStorage.length; i++){
+            data.push(localStorage.getItem(`run${i}`))
+        }
+        const date = new Date();
+        const minutes = date.getMinutes();
+        const seconds = date.getSeconds();
+        var vLink = document.getElementById('exportHistoryLink');
+        var vBlob = new Blob(data, {type: "octet/stream"});
+        vName = 'Results_' + minutes + '-' + seconds + '.json';
+        vUrl = window.URL.createObjectURL(vBlob);
+        console.log(vLink);
+        vLink.setAttribute('href', vUrl);
+        vLink.setAttribute('download', vName );
+        vLink.click();
+    }
+</script>
+
+</body>
+</html>

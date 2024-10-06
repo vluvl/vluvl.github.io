@@ -36,7 +36,7 @@ input[type=range] {width: 129px}
 output {display: inline-block; text-align: left}
 
 :root {--chartW: 294px; --chartH: 150px; --blurBuf: 30px}
-#stageFrame {position: relative; overflow: hidden; margin-bottom: 1em; width: 600px; height: 450px}
+#stageFrame {position: relative; overflow: hidden; margin-bottom: 1em; width: 700px; height: 600px; margin: auto}
 #stage {position: absolute; top: calc(var(--blurBuf) * -1); left: calc(var(--blurBuf) * -1); width: 600px; height: 450px}
 #device div:not(:first-of-type) {margin-top: 5px}
 #control {display: inline-block; white-space: nowrap}

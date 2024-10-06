@@ -10,31 +10,33 @@
     <link href='general.css' type='text/css' rel=stylesheet>
     <!-- tags here -->
     <style type='text/css'>
-        #stageFrame {position: relative; overflow: hidden; margin-bottom: 1em; width: 600px; height: 450px}
+        #wrap{position: relative; overflow: hidden; margin-bottom: 1em; width: 700px; height: 600px}
+        #voteButton{border: ghostwhite;padding: 15px 32px;text-align: center;text-decoration: none; display: inline-block; font-size: 48px;}
     </style>
 </head>
 
 <body style='min-width: 600px'>
-<h1>Chromatic aberration simulator (longitudinal and lateral)</h1>
+<h1>Chromatic aberration testing environment</h1>
 
-<h3>Simulator</h3>
+<h3>Click on one of the two buttons provided bellow. If you think the image has Chromatic Aberration, press the "Has Blur" button. Otherwise, press the No Blur button. If you think you have made a mistake, continue with the experiment as normal. The experiment might seem repetitive, but that is by design.</h3>
 
 <div style='display: grid; place-items: center'>
-
-    <div id=stageFrame>
-        <canvas id=stage></canvas>
+    <div id = wrap>
+        <div id=stageFrame>
+            <canvas id=stage></canvas>
+        </div>
     </div>
 
     <div id=control>
         <div style='display: inline-block'>
-            <div id=chart>
+            <div id=chart style="display: none;">
                 <div id=redCurve class=dragLayer style='background: red'></div>
                 <div id=greenCurve class=dragLayer style='background: green'></div>
                 <div id=blueCurve class=dragLayer style='background: blue'></div>
                 <div id=focusLine></div>
                 <canvas id=curves></canvas>
             </div>
-            <div id=buttons style='text-align: center'>
+            <div id=buttons style='text-align: center;display: none;'>
                 <button onclick="changeColor(this,'red')">R</button>
                 <output id=redXY style='color: red'></output>
                 <button onclick="changeColor(this,'green')">G</button>
@@ -68,14 +70,16 @@
 
             <fieldset id=images>
                 <legend>Image</legend>
-<!--                <div><input id=sqrs name=photo type=radio value='./testImages/1image.jpg' checked><label for=sqrs>Squares</label></div>-->
+                <div><input id=sqrs name=photo type=radio value='./testImages/1image.jpg' checked><label for=sqrs>Squares</label></div>
             </fieldset>
 
         </div>
 
     </form>
-    <button onclick="addBlur('red')">More blur</button>
-    <button onclick="subtractBlur('red')">Less blur</button>
+    <div id = vote>
+        <button id = voteButton onclick="trialAnswer('red', -1)">No Blur</button>
+        <button id = voteButton onclick="trialAnswer('red', 1)">Has Blur</button>
+    </div>
     <p style='margin-top: 1em'>Make a screen capture of the
         <a download='sim.png' href='' onclick="saveCanvas(this, 'sim')">simulation</a>.</p>
 
