@@ -37,6 +37,32 @@
     <button id = "start" onclick="location.href='start.html'" style="border: ghostwhite;padding: 15px 32px;text-align: center;text-decoration: none; display: inline-block; font-size: 48px;">Restart experiment</button>
 </div>
 
+<div>
+    <H3>
+        What is Chromatic Aberration?
+    </H3>
+    <p>
+        Chromatic aberration is a common optical phenomenon that occurs when a lens cannot bring all wavelengths of light to a single converging point either along different distances on the optical axis (axial aberration) or at different positions perpendicular to the optical axis (transverse aberration).
+        The main focus of this experiment is to find the maximum amount of axial chromatic aberration that, when applied to an image, it is not perceived.
+    </p>
+    <div class="image_with_text">
+        <div class="images">
+            <img src="CACompare.png"
+                 alt="compare chromatic aberrations"
+                 loading="lazy"
+                 class="CA">
+
+        </div>
+        <div class="text">
+            <p>
+                The figure to the left shows the different types of chromatic aberration. <b>(1)</b>  is the ideal scenario, where all light wavelengths focus on the same point. <b>(2)</b> is axial chromatic aberration, where the wavelengths of light focus on different distances on the optical axis. Lastly, <b>(3)</b> is transverse aberration, where the light wavelengths focus on different points perpendicular to the axis.
+                In this study, we will focus on the axial chromatic aberrations (2) where the wavelengths that are not well focused will cause a glow/blur around edges.
+            </p>
+        </div>
+
+    </div>
+</div>
+
 <script>
     function exportData(){
         let data = [];

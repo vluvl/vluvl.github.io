@@ -50,7 +50,7 @@
 
 var srcImg, r, g, b, iw, ih, blurBuf;
 var PESTArray = [];
-var PESTStop = 3.5;
+var PESTStop = 2.6;
 
 function initPEST(id, cur_val, stepSize, color) {
     var newPESTRun = {};
@@ -74,14 +74,15 @@ function initPEST(id, cur_val, stepSize, color) {
 var currentIndex = 0;
 
 var images = [];
-for (let i = 0; i < 3; i++) {
+for (let i = 0; i < 4; i++) {
     images.push(`./testImages/${i}image.jpg`)
 }
+var ABColor = ['red', 'red', 'blue', 'blue']
+var ABValue = [60, 45, 30, 90]
 for (let i = 0; i < images.length; i++) {
-    PESTArray.push(initPEST(i, 60 , 15, 'red')); //arbitrary values, should be changed later
+    PESTArray.push(initPEST(i, ABValue[i] , 20, ABColor[i])); //arbitrary values, should be changed later
 
 }
-console.log(PESTArray[0].value + ' ' + PESTArray[1].value);
 var presets = [
     [[0, 0], [0, 0], [0, 0], false, [0, 0, 0]] //no aberration
 ];  // LoCA curve minima (RGB), linked, LaCA values (RGB)
@@ -166,6 +167,7 @@ function changeImage() {
     console.log(currentIndex +' - Run: ' + PESTArray[currentIndex].run + '; Trial no. ' + PESTArray[currentIndex].trial + ' with ' +
         PESTArray[currentIndex].correctTrial + ' CTs has value: ' + PESTArray[currentIndex].value + ' and a step size: ' +
         PESTArray[currentIndex].step + ' with stepChenge: ' + PESTArray[currentIndex].stepChange);
+
 }
 
 function PESTRatio() {
@@ -260,14 +262,16 @@ function PESTDecision(detectBlur) {
     return imgValue;
 }
 
-function trialAnswer(color, polarity) {
+function trialAnswer(polarity) {
 
     // do pest decision here.
     var blurValue = PESTDecision(polarity);
     PESTArray[currentIndex].value = blurValue;
 
+    updateXY('red',0,0);
+    updateXY('blue',0,0);
+    //updateXY(PESTArray[currentIndex].color, blurValue, 0);
 
-    updateXY(color, blurValue, 0);
     drawCurves();
     changeImage();
 }
@@ -537,10 +541,12 @@ function renderImage() {
         $(srcImg).one('load', function () {
             loadRGB();
             updateXY(PESTArray[currentIndex].color, PESTArray[currentIndex].value, 0);
+            console.log("Color: " +  PESTArray[currentIndex].color + "  " + '(' + xy['red'][0] + ',' + xy['blue'][0] + ')');
             refreshImage();
         });
         $(srcImg).attr('src', `./testImages/${currentIndex}image.jpg`);
     }
+
     //drawRays();
 }
 
