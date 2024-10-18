@@ -50,7 +50,7 @@
 
 var srcImg, r, g, b, iw, ih, blurBuf;
 var PESTArray = [];
-var PESTStop = 2.6;
+var PESTStop = 0.5;
 
 function initPEST(id, cur_val, stepSize, color) {
     var newPESTRun = {};
@@ -166,7 +166,7 @@ function changeImage() {
     renderImage();
     console.log(currentIndex +' - Run: ' + PESTArray[currentIndex].run + '; Trial no. ' + PESTArray[currentIndex].trial + ' with ' +
         PESTArray[currentIndex].correctTrial + ' CTs has value: ' + PESTArray[currentIndex].value + ' and a step size: ' +
-        PESTArray[currentIndex].step + ' with stepChenge: ' + PESTArray[currentIndex].stepChange);
+        PESTArray[currentIndex].step + ' with stepChenge: ' + PESTArray[currentIndex].stepChange + ' streak: ' + PESTArray[currentIndex].directionStreak);
 
 }
 
@@ -207,45 +207,65 @@ function PESTDecision(detectBlur) {
     // Note: right and wrong answers mean that the participant can or cannot see Chromatic Aberration respectively
     // So when a participant answers with a right answer, it means that they see Chromatic Aberration
     if (PESTArray[currentIndex].correctTrial <= ratio - constantW) { // too many wrong answers
-        imgValue = decideNextValue(1); // increase blur
         if (PESTArray[currentIndex].directionStreak === 0) { // we are at first run of the whole experiment
             PESTArray[currentIndex].directionStreak = 1; // we do not influence the step size, just set the direction for future decisions
+
         } else if (PESTArray[currentIndex].directionStreak < 0) { // if we change direction from negative
             PESTArray[currentIndex].step /= 2; // half the step
             PESTArray[currentIndex].stepChange = 1 / 2; // record the step change
-            PESTArray[currentIndex].directionStreak = 1; // and set the new direction
-        } else if (PESTArray[currentIndex].directionStreak === 3) { // if we have made 3 steps in the positive direction (away from 0 CA)
+            PESTArray[currentIndex].directionStreak = 2; // and set the new direction
+
+        } else if (PESTArray[currentIndex].directionStreak === 1) {
+            PESTArray[currentIndex].directionStreak = 2; // continue to 2nd step
+
+        } else if (PESTArray[currentIndex].directionStreak === 2) {
+            PESTArray[currentIndex].directionStreak = 3; // continue to 3rd step
+
+        }else if (PESTArray[currentIndex].directionStreak === 3) { // if we have made 3 steps in the positive direction (away from 0 CA)
             if (PESTArray[currentIndex].stepChange !== 2) { // we check if the last step change was a doubling
                 PESTArray[currentIndex].step *= 2;  // and if it was not, we double the step now
                 PESTArray[currentIndex].stepChange = 2; // and record the doubling
             }
-            PESTArray[currentIndex].directionStreak += 1; // continue to 4th step
+            PESTArray[currentIndex].directionStreak = 4; // continue to 4th step
+
         } else { // starting from step 4 onwards
             PESTArray[currentIndex].step *= 2; // we double the step
             PESTArray[currentIndex].stepChange = 2; // and record the type of change
             PESTArray[currentIndex].directionStreak += 1; // continue counting
         }
+        imgValue = decideNextValue(1); // increase blur
         PESTArray[currentIndex].run += 1;
+
     } else if (PESTArray[currentIndex].correctTrial >= ratio + constantW) { // too many right answers
-        imgValue = decideNextValue(-1); // decrease blur
         if (PESTArray[currentIndex].directionStreak === 0) { // we are at first run of the whole experiment
             PESTArray[currentIndex].directionStreak = -1; // we do not influence the step size, just set the direction for future decisions
+
         } else if (PESTArray[currentIndex].directionStreak > 0) { // if we change direction from positive
             PESTArray[currentIndex].step /= 2; // half the step
             PESTArray[currentIndex].stepChange = 1 / 2; // record the step change
-            PESTArray[currentIndex].directionStreak = -1; // and set the new direction
+            PESTArray[currentIndex].directionStreak = -2; // and set the new direction
+
+        }else if (PESTArray[currentIndex].directionStreak === -1) {
+            PESTArray[currentIndex].directionStreak = -2; // continue to 2nd step
+
+        }else if (PESTArray[currentIndex].directionStreak === -2) {
+            PESTArray[currentIndex].directionStreak = -3; // continue to 3rd step
+
         } else if (PESTArray[currentIndex].directionStreak === -3) { // if we have made 3 steps in the negative direction (towards 0 CA)
             if (PESTArray[currentIndex].stepChange !== 2) { // we check if the last step change was a doubling
                 PESTArray[currentIndex].step *= 2;  // and if it was not, we double the step now
                 PESTArray[currentIndex].stepChange = 2; // and record the doubling
             }
-            PESTArray[currentIndex].directionStreak -= 1; // continue to 4th step
+            PESTArray[currentIndex].directionStreak = -4; // continue to 4th step
+
         } else { // starting from step 4 onwards
             PESTArray[currentIndex].step *= 2; // we double the step
             PESTArray[currentIndex].stepChange = 2; // and record the type of change
             PESTArray[currentIndex].directionStreak -= 1; // continue counting
         }
+        imgValue = decideNextValue(-1); // decrease blur
         PESTArray[currentIndex].run += 1;
+
     }
     if (imgValue !== PESTArray[currentIndex].value) {
         PESTArray[currentIndex].trialPerRun.push(PESTArray[currentIndex].trial);
@@ -259,6 +279,7 @@ function PESTDecision(detectBlur) {
         const saveRun = JSON.stringify(PESTArray[currentIndex]);
         localStorage.setItem(`run${currentIndex}`, saveRun);
     }
+
     return imgValue;
 }
 
