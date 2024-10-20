@@ -50,7 +50,7 @@
 
 var srcImg, r, g, b, iw, ih, blurBuf;
 var PESTArray = [];
-var PESTStop = 0.5;
+var PESTStop = 2;
 
 function initPEST(id, cur_val, stepSize, color) {
     var newPESTRun = {};
@@ -78,7 +78,7 @@ for (let i = 0; i < 4; i++) {
     images.push(`./testImages/${i}image.jpg`)
 }
 var ABColor = ['red', 'red', 'blue', 'blue']
-var ABValue = [60, 45, 30, 90]
+var ABValue = [60, 45, 30, 70]
 for (let i = 0; i < images.length; i++) {
     PESTArray.push(initPEST(i, ABValue[i] , 20, ABColor[i])); //arbitrary values, should be changed later
 
@@ -177,8 +177,8 @@ function PESTRatio() {
 function decideNextValue(direction) {
     var newValue;
     //limit the step size
-    if (PESTArray[currentIndex].step > 30){
-        PESTArray[currentIndex].step = 30;
+    if (PESTArray[currentIndex].step > 40){
+        PESTArray[currentIndex].step = 40;
     }
     // the value of chromatic aberration can go into negative, so we need to adjust our step direction accordingly
     if (PESTArray[currentIndex].value >= 0) {
