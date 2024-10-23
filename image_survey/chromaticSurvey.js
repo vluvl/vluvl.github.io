@@ -75,7 +75,7 @@ var currentIndex = 0;
 
 var images = [];
 for (let i = 0; i < 4; i++) {
-    images.push(`./testImages/${i}image.jpg`)
+    images.push(`testImages/${i}image.jpg`)
 }
 var ABColor = ['red', 'red', 'blue', 'blue']
 var ABValue = [60, 45, 30, 70]
@@ -267,6 +267,9 @@ function PESTDecision(detectBlur) {
         PESTArray[currentIndex].run += 1;
 
     }
+    if (PESTArray[currentIndex].run > 20){
+        PESTArray[currentIndex].status = 1;
+    }
     if (imgValue !== PESTArray[currentIndex].value) {
         PESTArray[currentIndex].trialPerRun.push(PESTArray[currentIndex].trial);
         PESTArray[currentIndex].valueHistory.push(PESTArray[currentIndex].value);
@@ -295,6 +298,8 @@ function trialAnswer(polarity) {
 
     drawCurves();
     changeImage();
+    var audio = document.getElementById("audio");
+    audio.play();
 }
 
 // function addBlur(colour) {
@@ -565,7 +570,7 @@ function renderImage() {
             console.log("Color: " +  PESTArray[currentIndex].color + "  " + '(' + xy['red'][0] + ',' + xy['blue'][0] + ')');
             refreshImage();
         });
-        $(srcImg).attr('src', `./testImages/${currentIndex}image.jpg`);
+        $(srcImg).attr('src', `testImages/${currentIndex}image.jpg`);
     }
 
     //drawRays();
