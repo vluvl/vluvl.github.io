@@ -267,9 +267,6 @@ function PESTDecision(detectBlur) {
         PESTArray[currentIndex].run += 1;
 
     }
-    if (PESTArray[currentIndex].run > 20){
-        PESTArray[currentIndex].status = 1;
-    }
     if (imgValue !== PESTArray[currentIndex].value) {
         PESTArray[currentIndex].trialPerRun.push(PESTArray[currentIndex].trial);
         PESTArray[currentIndex].valueHistory.push(PESTArray[currentIndex].value);
@@ -277,7 +274,7 @@ function PESTDecision(detectBlur) {
         PESTArray[currentIndex].trial = 0;
         PESTArray[currentIndex].correctTrial = 0;
     }
-    if(PESTArray[currentIndex].step <= PESTStop){
+    if(PESTArray[currentIndex].step <= PESTStop || PESTArray[currentIndex].run > 20){
         PESTArray[currentIndex].status = 1;
         const saveRun = JSON.stringify(PESTArray[currentIndex]);
         localStorage.setItem(`run${currentIndex}`, saveRun);
