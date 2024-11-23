@@ -80,7 +80,7 @@ for (let i = 0; i < 4; i++) {
 var ABColor = ['red', 'red', 'blue', 'blue']
 var ABValue = [60, 45, 30, 70]
 for (let i = 0; i < images.length; i++) {
-    PESTArray.push(initPEST(i, ABValue[i] , 20, ABColor[i])); //arbitrary values, should be changed later
+    PESTArray.push(initPEST(i, ABValue[i] , 20, ABColor[i]));
 
 }
 var presets = [
