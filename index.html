@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="/style.css">
 <link rel="icon" type="image/x-icon" href="/resources/img/icons/not%20v.jpg">
 <head>
     <meta charset="UTF-8">
@@ -10,13 +10,7 @@
 <body >
     <nav>
         <h1>Vlad Muscoi</h1>
-	<ul class="navigation">
-        <li><a href="#about" class="nav-link">About</a></li>
-        <li><a href="#skills" class="nav-link">Skills</a></li>
-        <li><a href="#projects" class="nav-link">Projects</a></li>
-        <li><a href="#contact" class="nav-link">Contact</a></li>
-        <li><a href="image_survey/start.html" class="nav-link">Image Survey</a></li>
-      </ul>
+        <div id="top"></div>
     </nav>
     <h1>Under construction</h1>
     <p>This will be the place where I will log and detail the projects that I work on. <br>
@@ -26,51 +20,21 @@
     <ul>
         <li>Landing page:
             <ol>
-                <li>Complete navbar + functionality</li>
-                <li>Add description text (such as who am I, why do I like what I do, what do I do?)</li>
-                <li>List of skills and projects</li>
+                <li>Complete navbar + functionality (almost done)</li>
+                <li>Build new pages for projects and for the blog</li>
+                <li>Populate each page with text on their respective topic</li>
+                <li>Folder restructure? It is starting to get messy</li>
             </ol>
         </li>
         <li>Blog:
             <ol>
-                <li>Figure out how articles will be handled (Each has an HTML page that I just load in, or do I make an interface where I can write the text and the site does the rest for me?)</li>
+                <li>Blog will be hard to do on GitHub pages as it does not allow for a backend, so I will host my own server I think</li>
+                <li>That means configuring and running a server on a mini PC</li>
                 <li>Actually making articles</li>
-                <li>Figure out backend</li>
             </ol>
         </li>
     </ul>
 
-
-    <section class="hero" id="about">
-        <img
-                src="resources/img/icons/not%20v.jpg"
-                alt="placeholder"
-                loading="lazy"
-                class="hero-img"
-
-        />
-        <div class="bio animate__animated animate__shakeX">
-
-            <h2 class="bio-title">About Me</h2>
-
-            <p class="bio-text">
-                Placeholder.
-            </p>
-        </div>
-    </section>
-
-    <section class="more-about">
-        <h2>More About Me</h2>
-        <p>
-            yes
-        </p>
-        <p>
-            no
-        </p>
-        <p>
-            maybe
-        </p>
-    </section>
 
 <!-- Ion icons scripts -->
     <script
@@ -81,7 +45,7 @@
       nomodule
       src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"
     ></script>
-
+    <script src="/scripts/topBar.js"></script>
 </body>
 </html>
 <!DOCTYPE html>
