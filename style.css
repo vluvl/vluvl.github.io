@@ -16,7 +16,9 @@
     --line-height: 1.7rem;
     --transition: 0.3s;
 }
+
 /*Reset*/
+
 * {
     margin: 0;
     padding: 0;
