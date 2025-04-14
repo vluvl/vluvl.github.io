@@ -2,8 +2,15 @@
 :root {
     --font-family: verdana, serif;
     --text-color: white;
-    --bg-color: #8783c7;
-    --bg-color-dark: #4a486e;
+    --bg-color: #5F50B4;
+    --bg-color-dark: #5B4486;
+
+    --ac-color-light: #673493/*#3E3099*/;
+    --ac-color-dark: #472A86;
+    --ac-color-highlight: #502EA4;
+    --ac-color-vibrant: #562DB6;
+    --ac-color-darker: #262358;
+
     --normal-font: 400;
     --bold-font: 700;
     --bolder-font: 900;
@@ -28,7 +35,8 @@
 /*Big components*/
 
 body {
-    background-color: var(--bg-color);
+    /*background-color: var(--bg-color);*/
+    background-color: var(--ac-color-darker);
 }
 
 html {
@@ -44,14 +52,16 @@ nav {
     align-items: end;
     justify-content: flex-end;
     padding: 1.5rem 3.5rem;
-    background: linear-gradient(to bottom, var(--bg-color-dark), var(--bg-color));
-    background-color: var(--bg-color-dark);
+    background: linear-gradient(to bottom, var(--ac-color-light), var(--ac-color-darker));
+    background-color: var(--ac-color-dark);
     /*box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);*/
 }
+
 
 /*Lists*/
 
 ul, ol  {
+    color: var(--text-color);
     text-align: left;
     justify-content: center;
     margin-left: 12px;
@@ -70,11 +80,13 @@ p {
     justify-content: center;
     font-family: var(--font-family);
     font-size: 20px;
+    line-height: var(--line-height);
 }
 
 h1 {
     color: var(--text-color);
-    text-align: left;
+    font-size: 2.7rem;
+    text-align: center;
     justify-content: center;
 }
 
@@ -92,21 +104,24 @@ nav a:hover {
 
 /*Custom classes*/
 
-.box{
-    max-width: fit-content;
-    margin-left: auto;
-    margin-right: auto;
-    margin-bottom: 12px;
-    background: linear-gradient(to bottom, var(--bg-color-dark), var(--bg-color));
-    width: 50rem;
-    padding: 0.625rem 2.5rem;
-    border-radius: 6px;
-    box-shadow: 0px 2px 15px 2px var(--primary-shadow);
-    justify-content: center;
+.top h1{
+    font-size: 1.7rem;
 }
 
-
-
+.box{
+    max-width: 95%;
+    width: fit-content;
+    margin-inline: auto;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 12px;
+    margin-bottom: 24px;
+    background: linear-gradient(to bottom, var(--ac-color-darker), var(--ac-color-dark));
+    padding: 0.625rem 2.5rem;
+    border-radius: 6px;
+    box-shadow: 0px 2px 15px 2px var(--ac-color-vibrant);
+    justify-content: center;
+}
 .hero {
     display: flex;
     align-items: center;
